@@ -1,0 +1,67 @@
+{% extends "base.html " %}
+{% block content %}
+
+<div class="col-6 mx-auto">
+    <div class="text-center mt-5">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqRNSf8qJCx7jIAeyoY89vC9AZ2-VSZfjacA&usqp=CAU" class="img-fluid img-responsive"
+        style="height:200px">
+    </div>
+    <form  method="post">
+      {% csrf_token %}
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Enter name</label>
+          <input type="name" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Enter Amount</label>
+          <input type="number" name="amount" class="form-control" id="exampleInputPassword1">
+        </div>
+        
+        <button type="submit" class="btn btn-success btn-block">Submit</button>
+
+        
+      </form>
+
+</div>
+
+{% if payment %}
+<div class="text-center mx-auto">
+  <form action="{% url 'success' %}" method="POST">
+    <button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_b8FE4yq6XB6FGB", // Enter the Key ID generated from the Dashboard
+    "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Coffee-Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "{% url 'success' %}",
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9009438902"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+    
+  </form>
+  {% endif %}
+
+</div>
+{% endblock %}
+
